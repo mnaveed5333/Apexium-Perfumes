@@ -9,7 +9,6 @@ import { HeaderProvider } from './context/HeaderContext'
 import Header from './components/common/Header'
 import Footer from './components/common/Footer'
 import routes from './routes'
-import { FiArrowUp } from 'react-icons/fi'
 import { FaWhatsapp } from 'react-icons/fa'
 
 function App() {
@@ -37,14 +36,7 @@ function App() {
                 </main>
                 <Footer />
 
-                {/* Go to Top Button */}
-                <button
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                  className="fixed bottom-4 left-4 md:bottom-6 md:left-6 bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-700 hover:to-indigo-600 text-white p-3 md:p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-50"
-                  aria-label="Go to top"
-                >
-                  <FiArrowUp size={20} className="md:w-6 md:h-6" />
-                </button>
+
 
                 {/* WhatsApp Floating Button */}
                 <a
