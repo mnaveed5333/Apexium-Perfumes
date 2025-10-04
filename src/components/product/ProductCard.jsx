@@ -60,8 +60,8 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
   return (
     <motion.div
       className={`group relative rounded-xl overflow-hidden shadow-md hover:shadow-xl
-      transition-all duration-500 bg-white border border-slate-200
-      ${viewMode === 'list' ? 'flex flex-row' : ''}`}
+      transition-all duration-500 bg-white border border-slate-200 flex flex-col items-center
+      ${viewMode === 'list' ? 'flex-row' : ''}`}
       variants={cardVariants}
       initial="hidden"
       animate="visible"
@@ -70,21 +70,23 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
       <Link to={`/product/${product.id}`} className="block w-full h-full">
         {/* Image Section */}
         <div
-          className={`relative overflow-hidden
-          ${viewMode === 'list' ? 'w-32 h-32 flex-shrink-0' : 'w-28 h-28 md:w-full md:h-56'}`}
+          className={`relative overflow-hidden flex justify-center items-center
+          ${viewMode === 'list' ? 'w-32 h-32 flex-shrink-0' : 'w-24 h-24 md:w-36 md:h-40'}`}
         >
           {!imageLoaded && (
             <div className="absolute inset-0 bg-slate-200 animate-pulse" />
           )}
 
-          <motion.img
-            src={product.image}
-            alt={product.title}
-            className={`w-full h-full object-contain transition duration-700 ease-in-out 
-            ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-            onLoad={() => setImageLoaded(true)}
-            whileHover={{ scale: 1.05 }}
-          />
+          <motion.div className="flex justify-center items-center w-full h-full">
+            <motion.img
+              src={product.image}
+              alt={product.title}
+              className={`max-w-full max-h-full object-contain object-center mx-auto transition duration-700 ease-in-out
+              ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              onLoad={() => setImageLoaded(true)}
+              whileHover={{ scale: 1.05 }}
+            />
+          </motion.div>
 
           {/* Discount Badge */}
           {product.discount > 0 && (
@@ -134,7 +136,7 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
         </div>
 
         {/* Product Info */}
-        <div className={`p-3 ${viewMode === 'list' ? 'flex-1' : ''}`}>
+        <div className={`p-3 ${viewMode === 'list' ? 'flex-1' : ''} flex flex-col items-center text-center`}>
           {/* Title */}
           <motion.h3
             className="text-sm font-semibold text-gray-900 mb-1 line-clamp-1 group-hover:text-blue-600 transition-colors"

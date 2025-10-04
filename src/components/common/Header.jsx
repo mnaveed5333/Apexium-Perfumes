@@ -122,9 +122,9 @@ const Header = () => {
     visible: { transition: { staggerChildren: 0.05 } }
   }
   const mobileMenuVariants = {
-    hidden: { x: '-100%', opacity: 0 },
+    hidden: { x: '100%', opacity: 0 },
     visible: { x: '0%', opacity: 1, transition: { type: 'spring', stiffness: 300, damping: 28 } },
-    exit: { x: '-100%', opacity: 0, transition: { duration: 0.2 } }
+    exit: { x: '100%', opacity: 0, transition: { duration: 0.2 } }
   }
   const dropdownVariants = {
     hidden: { opacity: 0, y: -10, scale: 0.95 },
@@ -184,23 +184,8 @@ const Header = () => {
       >
         <div className="max-w-7xl mx-auto px-2 xs:px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-12 xs:h-14 sm:h-16">
-            {/* Left: logo + mobile hamburger */}
+            {/* Left: logo */}
             <div className="flex items-center gap-1 xs:gap-2 sm:gap-3">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsMenuOpen((s) => !s)}
-                className="p-1.5 xs:p-2 rounded-full border border-transparent hover:border-blue-500 transition-all duration-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black"
-                aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-                aria-expanded={isMenuOpen}
-              >
-                {isMenuOpen ? (
-                  <CloseIcon size={showMinimalUI ? 18 : 20} className="text-black" />
-                ) : (
-                  <HamburgerIcon size={showMinimalUI ? 18 : 20} className="text-black" />
-                )}
-              </motion.button>
-
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -378,6 +363,22 @@ const Header = () => {
                   </motion.div>
                 </div>
               ) : null}
+
+              {/* Mobile hamburger menu */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsMenuOpen((s) => !s)}
+                className="p-1.5 xs:p-2 rounded-full border border-transparent hover:border-blue-500 transition-all duration-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black"
+                aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={isMenuOpen}
+              >
+                {isMenuOpen ? (
+                  <CloseIcon size={showMinimalUI ? 18 : 20} className="text-black" />
+                ) : (
+                  <HamburgerIcon size={showMinimalUI ? 18 : 20} className="text-black" />
+                )}
+              </motion.button>
             </div>
           </div>
         </div>
@@ -386,7 +387,7 @@ const Header = () => {
         <AnimatePresence>
           {isMenuOpen && (
             <motion.aside
-              className="fixed inset-y-0 left-0 z-50 w-[240px] xs:w-[260px] bg-gradient-to-b from-white to-gray-50 border-r border-gray-200 shadow-lg"
+              className="fixed inset-y-0 right-0 z-50 w-[240px] xs:w-[260px] bg-gradient-to-b from-white to-gray-50 border-l border-gray-200 shadow-lg"
               initial="hidden"
               animate="visible"
               exit="hidden"

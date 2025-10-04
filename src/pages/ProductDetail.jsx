@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { FiStar, FiHeart, FiShare2, FiShoppingCart, FiMinus, FiPlus } from 'react-icons/fi'
+import { FiStar, FiHeart, FiShoppingCart, FiMinus, FiPlus, FiArrowUp } from 'react-icons/fi'
+import { BsHeartFill } from 'react-icons/bs'
 import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
 import { useAuth } from '../context/AuthContext'
@@ -40,7 +41,6 @@ const ProductDetail = () => {
     )
   }
 
-  const isWishlisted = wishlistItems.some(item => item.id === product.id)
   const relatedProducts = products.filter(p => p.id !== product.id).slice(0, 4)
 
   const handleAddToCart = () => {
@@ -50,17 +50,6 @@ const ProductDetail = () => {
   const handleOrderOnWhatsApp = () => {
     const message = `Hi, I want to order: ${product.title}\nQuantity: ${quantity}\nPrice: $${product.price * quantity}\n\nProduct Link: ${window.location.href}`
     const whatsappUrl = `https://wa.me/923405542097?text=${encodeURIComponent(message)}`
-    window.open(whatsappUrl, '_blank')
-  }
-
-  const handleWishlistToggle = () => {
-    if (!isAuthenticated) return alert('Please login to manage your wishlist')
-    isWishlisted ? removeFromWishlist(product.id) : addToWishlist(product)
-  }
-
-  const handleShareToWhatsApp = () => {
-    const message = `Check out this amazing product: ${product.title}\n\nPrice: $${product.price}\n\n${product.description}\n\nView product: ${window.location.href}`
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
   }
 
@@ -110,8 +99,22 @@ const ProductDetail = () => {
           </div>
 
           {/* Product Info */}
-          <div>
+          <div className="relative">
             <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
+            <div className="absolute top-0 right-0 cursor-pointer" onClick={() => {
+              if (!isAuthenticated) {
+                alert('Please login to manage your wishlist')
+                return
+              }
+              const isWishlisted = wishlistItems.some(item => item.id === product.id)
+              isWishlisted ? removeFromWishlist(product.id) : addToWishlist(product)
+            }}>
+              {wishlistItems.some(item => item.id === product.id) ? (
+                <BsHeartFill className="w-8 h-8 text-red-500" />
+              ) : (
+                <FiHeart className="w-8 h-8 text-gray-400 hover:text-red-500 transition-colors" />
+              )}
+            </div>
 
             <div className="flex items-center mb-4 space-x-4">
               <div className="flex items-center">
@@ -170,23 +173,6 @@ const ProductDetail = () => {
                 <FiShoppingCart /> Add to Cart
               </button>
             </div>
-
-            {/* Wishlist & Share */}
-            <div className="flex gap-4">
-              <button
-                onClick={handleWishlistToggle}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${isWishlisted ? 'bg-red-100 text-red-600 hover:bg-red-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}
-              >
-                <FiHeart /> {isWishlisted ? 'Wishlisted' : 'Add to Wishlist'}
-              </button>
-              <button
-                onClick={handleShareToWhatsApp}
-                className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-              >
-                <FiShare2 /> Share on WhatsApp
-              </button>
-            </div>
           </div>
         </div>
 
@@ -197,6 +183,11 @@ const ProductDetail = () => {
             <ProductCarousel products={relatedProducts} />
           </div>
         )}
+
+        {/* Arrow Up Icon */}
+        <div className="fixed bottom-4 left-4 md:bottom-6 md:left-6 bg-gradient-to-r from-blue-600 to-indigo-500 text-white p-3 md:p-4 rounded-full shadow-lg z-50">
+          <FiArrowUp size={20} className="md:w-6 md:h-6" />
+        </div>
       </div>
     </div>
   )

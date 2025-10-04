@@ -21,6 +21,9 @@ const Shop = () => {
     onSale: false
   })
 
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
+
   const searchQuery = searchParams.get('search') || ''
   const categoryParam = searchParams.get('category') || ''
 
@@ -87,6 +90,7 @@ const Shop = () => {
       }
 
       setFilteredProducts(result)
+      setCurrentPage(1) // Reset to first page on filter change
     } catch (err) {
       setError('An error occurred while filtering products. Please try again or clear filters.')
       console.error('Filter error:', err)
@@ -135,6 +139,11 @@ const Shop = () => {
     hover: { scale: 1.05, boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' },
     tap: { scale: 0.95 }
   }
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedProducts = filteredProducts.slice(startIndex, endIndex)
 
   if (loading) {
     return (
@@ -302,7 +311,7 @@ const Shop = () => {
           variants={itemVariants}
         >
           <p className="text-sm text-gray-600 mb-4 sm:mb-0">
-            Showing <span className="font-medium">{filteredProducts.length}</span> products
+            Showing <span className="font-medium">{startIndex + 1}-{Math.min(endIndex, filteredProducts.length)}</span> of <span className="font-medium">{filteredProducts.length}</span> products
           </p>
 
           <div className="flex items-center space-x-4">
@@ -338,105 +347,97 @@ const Shop = () => {
         </motion.div>
 
         {/* Products Grid */}
-        {filteredProducts.length === 0 ? (
-          <motion.div
-            className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100"
-            variants={itemVariants}
-          >
-            <div className="text-gray-300 text-6xl mb-4">🔍</div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No products found
-            </h3>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">
-              Try adjusting your search or filter criteria to find what you're looking for.
-            </p>
-            <motion.button
-              onClick={() => setFilters({
-                category: '',
-                brand: '',
-                minPrice: '',
-                maxPrice: '',
-                inStock: false,
-                onSale: false
-              })}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-            >
-              Clear all filters
-            </motion.button>
-          </motion.div>
-        ) : (
-          <>
-            <motion.div
-              className={`
-                grid gap-6 mb-8
-                ${viewMode === 'grid'
-                  ? 'grid-cols-2'
-                  : 'grid-cols-1'
-                }
-              `}
-              variants={containerVariants}
-            >
-              {filteredProducts.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  variants={itemVariants}
-                  custom={index}
-                  initial="hidden"
-                  animate="visible"
-                  transition={{ delay: index * 0.05 }}
+            {filteredProducts.length === 0 ? (
+              <motion.div
+                className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100"
+                variants={itemVariants}
+              >
+                <div className="text-gray-300 text-6xl mb-4">🔍</div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No products found
+                </h3>
+                <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                  Try adjusting your search or filter criteria to find what you're looking for.
+                </p>
+                <motion.button
+                  onClick={() => setFilters({
+                    category: '',
+                    brand: '',
+                    minPrice: '',
+                    maxPrice: '',
+                    inStock: false,
+                    onSale: false
+                  })}
+                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
                 >
-                  <ProductCard product={product} viewMode={viewMode} />
+                  Clear all filters
+                </motion.button>
+              </motion.div>
+            ) : (
+              <>
+                <motion.div
+                  className={`
+                    grid gap-6 mb-8
+                    ${viewMode === 'grid'
+                      ? 'grid-cols-2'
+                      : 'grid-cols-1'
+                    }
+                  `}
+                  variants={containerVariants}
+                >
+                  {paginatedProducts.map((product, index) => (
+                    <motion.div
+                      key={product.id}
+                      variants={itemVariants}
+                      custom={index}
+                      initial="hidden"
+                      animate="visible"
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <ProductCard product={product} viewMode={viewMode} />
+                    </motion.div>
+                  ))}
                 </motion.div>
-              ))}
-            </motion.div>
 
             {/* Pagination */}
-            {filteredProducts.length > 12 && (
+            {totalPages > 1 && (
               <motion.div
                 className="flex justify-center"
                 variants={itemVariants}
               >
                 <nav className="flex items-center space-x-2">
                   <motion.button
-                    className="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                    className={`px-4 py-2 rounded-lg ${currentPage === 1 ? 'border border-gray-200 text-gray-400 cursor-not-allowed' : 'border border-gray-200 text-gray-600 hover:bg-gray-50'} focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors`}
                     variants={buttonVariants}
-                    whileHover="hover"
-                    whileTap="tap"
+                    whileHover={currentPage !== 1 ? "hover" : {}}
+                    whileTap={currentPage !== 1 ? "tap" : {}}
                   >
                     Previous
                   </motion.button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <motion.button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`px-4 py-2 rounded-lg ${currentPage === page ? 'bg-blue-600 text-white' : 'border border-gray-200 text-gray-600 hover:bg-gray-50'} focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors`}
+                      variants={buttonVariants}
+                      whileHover="hover"
+                      whileTap="tap"
+                    >
+                      {page}
+                    </motion.button>
+                  ))}
                   <motion.button
-                    className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={currentPage === totalPages}
+                    className={`px-4 py-2 rounded-lg ${currentPage === totalPages ? 'border border-gray-200 text-gray-400 cursor-not-allowed' : 'border border-gray-200 text-gray-600 hover:bg-gray-50'} focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors`}
                     variants={buttonVariants}
-                    whileHover="hover"
-                    whileTap="tap"
-                  >
-                    1
-                  </motion.button>
-                  <motion.button
-                    className="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
-                    variants={buttonVariants}
-                    whileHover="hover"
-                    whileTap="tap"
-                  >
-                    2
-                  </motion.button>
-                  <motion.button
-                    className="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
-                    variants={buttonVariants}
-                    whileHover="hover"
-                    whileTap="tap"
-                  >
-                    3
-                  </motion.button>
-                  <motion.button
-                    className="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
-                    variants={buttonVariants}
-                    whileHover="hover"
-                    whileTap="tap"
+                    whileHover={currentPage !== totalPages ? "hover" : {}}
+                    whileTap={currentPage !== totalPages ? "tap" : {}}
                   >
                     Next
                   </motion.button>

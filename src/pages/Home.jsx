@@ -75,13 +75,7 @@ const Home = () => {
     }
   }
 
-  // Auto-change hero image every 10 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % products.length)
-    }, 10000)
-    return () => clearInterval(timer)
-  }, [])
+
 
   // price range
   const priceRange = { min: Math.floor(Math.min(...products.map(p => p.price))), max: Math.ceil(Math.max(...products.map(p => p.price))) }
@@ -107,9 +101,9 @@ const Home = () => {
   }, [])
 
   // derived product groups
-  const featuredProducts = products.slice(0, 8)
-  const bestSellers = products.filter(p => p.rating?.rate >= 4.5).slice(0, 6)
-  const newArrivals = products.slice(-6)
+  const featuredProducts = products.slice(0, 2)
+  const bestSellers = products.filter(p => p.rating?.rate >= 4.5).slice(0, 2)
+  const newArrivals = products.slice(-2)
 
   return (
     <div className="min-h-screen" style={{ background: theme.background.gradient }}>
@@ -138,7 +132,20 @@ const Home = () => {
             <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: theme.text.primary }}>Featured Products</h2>
             <p className="text-lg" style={{ color: theme.text.secondary }}>Discover our handpicked selection</p>
           </div>
-          <ProductCarousel products={featuredProducts} autoPlay={true} interval={4000} />
+          <div className="grid grid-cols-2 gap-8 mb-8">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+          <div className="text-center">
+            <Link
+              to="/shop"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105"
+              style={{ background: theme.accent.primaryGradient, color: theme.text.primary }}
+            >
+              Discover More <FiArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -152,7 +159,20 @@ const Home = () => {
             <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: theme.text.primary }}>Best Sellers</h2>
             <p className="text-lg" style={{ color: theme.text.secondary }}>Customer favorites</p>
           </div>
-          <ProductCarousel products={bestSellers} autoPlay={false} />
+          <div className="grid grid-cols-2 gap-8 mb-8">
+            {bestSellers.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+          <div className="text-center">
+            <Link
+              to="/shop"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105"
+              style={{ background: theme.accent.primaryGradient, color: theme.text.primary }}
+            >
+              Discover More <FiArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -163,7 +183,20 @@ const Home = () => {
             <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: theme.text.primary }}>New Arrivals</h2>
             <p className="text-lg" style={{ color: theme.text.secondary }}>Fresh products just added</p>
           </div>
-          <ProductCarousel products={newArrivals} autoPlay={true} interval={3000} />
+          <div className="grid grid-cols-2 gap-8 mb-8">
+            {newArrivals.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+          <div className="text-center">
+            <Link
+              to="/shop"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105"
+              style={{ background: theme.accent.primaryGradient, color: theme.text.primary }}
+            >
+              Discover More <FiArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </section>
       {/* Why Choose Us */}
