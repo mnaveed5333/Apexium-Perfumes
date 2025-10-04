@@ -75,8 +75,6 @@ const Home = () => {
     }
   }
 
-
-
   // price range
   const priceRange = { min: Math.floor(Math.min(...products.map(p => p.price))), max: Math.ceil(Math.max(...products.map(p => p.price))) }
 
@@ -101,13 +99,12 @@ const Home = () => {
   }, [])
 
   // derived product groups
-  const featuredProducts = products.slice(0, 2)
-  const bestSellers = products.filter(p => p.rating?.rate >= 4.5).slice(0, 2)
-  const newArrivals = products.slice(-2)
+  const featuredProducts = products.slice(0, 4)
+  const bestSellers = products.filter(p => p.rating?.rate >= 4.5).slice(0, 4)
+  const newArrivals = products.slice(-4)
 
   return (
     <div className="min-h-screen" style={{ background: theme.background.gradient }}>
-      
 
       {/* ACURA NEW PRODUCT HERO */}
       <section className="relative w-full">
@@ -132,7 +129,7 @@ const Home = () => {
             <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: theme.text.primary }}>Featured Products</h2>
             <p className="text-lg" style={{ color: theme.text.secondary }}>Discover our handpicked selection</p>
           </div>
-          <div className="grid grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -149,9 +146,6 @@ const Home = () => {
         </div>
       </section>
 
-
-      
-
       {/* Best Sellers */}
       <section className="py-16" style={{ background: theme.background.secondary }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -159,7 +153,7 @@ const Home = () => {
             <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: theme.text.primary }}>Best Sellers</h2>
             <p className="text-lg" style={{ color: theme.text.secondary }}>Customer favorites</p>
           </div>
-          <div className="grid grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             {bestSellers.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -183,7 +177,7 @@ const Home = () => {
             <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: theme.text.primary }}>New Arrivals</h2>
             <p className="text-lg" style={{ color: theme.text.secondary }}>Fresh products just added</p>
           </div>
-          <div className="grid grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             {newArrivals.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -199,6 +193,7 @@ const Home = () => {
           </div>
         </div>
       </section>
+
       {/* Why Choose Us */}
       <section className="py-16" style={{ background: theme.background.secondary }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -206,7 +201,7 @@ const Home = () => {
             <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: theme.text.primary }}>Why Choose Apexium</h2>
             <p className="text-lg" style={{ color: theme.text.secondary }}>Experience luxury and quality in every bottle</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { icon: FiAward, title: 'Premium Quality', desc: 'Authentic fragrances from renowned perfumers' },
               { icon: FiShield, title: 'Secure Shopping', desc: 'Safe and encrypted transactions' },
