@@ -382,7 +382,7 @@ const Shop = () => {
                   className={`
                     grid gap-6 mb-8
                     ${viewMode === 'grid'
-                      ? 'grid-cols-2'
+                      ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4'
                       : 'grid-cols-1'
                     }
                   `}

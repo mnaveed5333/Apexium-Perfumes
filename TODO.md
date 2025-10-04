@@ -1,12 +1,10 @@
-# TODO: Implement Pagination in Shop Page
+# TODO: Remove Backend and Relations
 
-- [x] Add state for currentPage (default 1) and itemsPerPage (10)
-- [x] Reset currentPage to 1 when filters change in the filtering useEffect
-- [x] Calculate totalPages, startIndex, endIndex, and paginatedProducts
-- [x] Update the "Showing X products" text to show range (e.g., "Showing 1-10 of 20 products")
-- [x] Make pagination navigation functional:
-  - Show only if totalPages > 1
-  - Implement Previous/Next buttons with disable states
-  - Generate page number buttons dynamically
-- [x] Render paginatedProducts instead of filteredProducts in the grid
-- [x] Test pagination functionality
+## Tasks
+- [x] Delete the `backend/` directory
+- [x] Update `src/pages/Shop.jsx` to use static products from `constants.jsx` instead of API
+- [x] Update `src/services/authService.jsx` to mock authentication using localStorage
+- [x] Update `src/pages/Checkout.jsx` to mock payment intent creation
+- [x] Remove unused API service imports and references
+- [x] Update Home.jsx to display 4 products in each section (Featured, Best Sellers, New Arrivals)
+- [x] Test the application to ensure it works without backend
